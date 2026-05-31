@@ -1,0 +1,6 @@
+@AutomationBackend_HostAddress = http://localhost:5017
+
+GET {{AutomationBackend_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
