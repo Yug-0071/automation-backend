@@ -95,14 +95,21 @@ namespace AutomationBackend.Services
 
                 Console.WriteLine("EMAIL SENT SUCCESSFULLY");
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine("EMAIL ERROR:");
-                Console.WriteLine(ex.Message);
-                Console.WriteLine(ex.StackTrace);
+catch (Exception ex)
+{
+    Console.WriteLine("========== EMAIL ERROR ==========");
+    Console.WriteLine("Message: " + ex.Message);
 
-                throw;
-            }
+    if (ex.InnerException != null)
+    {
+        Console.WriteLine("Inner Error: " + ex.InnerException.Message);
+    }
+
+    Console.WriteLine("Full Error:");
+    Console.WriteLine(ex.ToString());
+
+    throw;
+}
         }
     }
 }
