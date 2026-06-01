@@ -81,6 +81,12 @@ namespace AutomationBackend.Services
                 message.Body = body;
                 message.IsBodyHtml = true;
 
+Console.WriteLine("===== EMAIL DEBUG =====");
+Console.WriteLine($"SMTP SERVER: {smtpServer}");
+Console.WriteLine($"SMTP PORT: {smtpPort}");
+Console.WriteLine($"SMTP USER: {smtpUsername}");
+Console.WriteLine("=======================");
+
                 using var client = new SmtpClient(smtpServer, smtpPort);
 
                 client.EnableSsl = true;
