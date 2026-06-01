@@ -158,44 +158,42 @@ namespace AutomationBackend.Controllers
             return Ok(MapToDto(existing));
         }
 
-        private async Task<string> HandleImageUpload(IFormFile file)
-        {
-            var rootPath = _env.WebRootPath ?? Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
-            var folder = Path.Combine(rootPath, "product-images");
-            if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
+      private async Task<string> HandleImageUpload(IFormFile file)
+{
+    var uniqueName = Guid.NewGuid().ToString() + "_" + Path.GetFileName(file.FileName);
 
-            var uniqueName = Guid.NewGuid().ToString() + "_" + Path.GetFileName(file.FileName);
-            var filePath = Path.Combine(folder, uniqueName);
+    using var memoryStream = new MemoryStream();
 
-            using (var stream = new FileStream(filePath, FileMode.Create))
-            {
-                await file.CopyToAsync(stream);
-            }
+    await file.CopyToAsync(memoryStream);
 
-            // Save image bytes persistently to the database SQL Server for Render
-            using (var memoryStream = new MemoryStream())
-            {
-                await file.CopyToAsync(memoryStream);
-                var fileBytes = memoryStream.ToArray();
+    var fileBytes = memoryStream.ToArray();
 
-                var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
-                var contentType = "image/png";
-                if (ext == ".jpg" || ext == ".jpeg") contentType = "image/jpeg";
-                else if (ext == ".gif") contentType = "image/gif";
-                else if (ext == ".svg") contentType = "image/svg+xml";
+    var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
 
-                var dbFile = new UploadedFile
-                {
-                    FilePath = "/product-images/" + uniqueName,
-                    FileData = fileBytes,
-                    ContentType = contentType
-                };
-                _context.UploadedFiles.Add(dbFile);
-            }
+    var contentType = "image/png";
 
-            return "/product-images/" + uniqueName;
-        }
+    if (ext == ".jpg" || ext == ".jpeg")
+        contentType = "image/jpeg";
+    else if (ext == ".gif")
+        contentType = "image/gif";
+    else if (ext == ".svg")
+        contentType = "image/svg+xml";
+    else if (ext == ".webp")
+        contentType = "image/webp";
 
+    var dbFile = new UploadedFile
+    {
+        FilePath = "/product-images/" + uniqueName,
+        FileData = fileBytes,
+        ContentType = contentType
+    };
+
+    _context.UploadedFiles.Add(dbFile);
+
+    await _context.SaveChangesAsync();
+
+    return "/product-images/" + uniqueName;
+}
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProduct(int id)
         {
