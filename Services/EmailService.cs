@@ -97,16 +97,9 @@ namespace AutomationBackend.Services
             }
 catch (Exception ex)
 {
-    Console.WriteLine("========== EMAIL ERROR ==========");
-    Console.WriteLine("Message: " + ex.Message);
-
-    if (ex.InnerException != null)
-    {
-        Console.WriteLine("Inner Error: " + ex.InnerException.Message);
-    }
-
-    Console.WriteLine("Full Error:");
-    Console.WriteLine(ex.ToString());
+    Console.WriteLine("EMAIL ERROR:");
+    Console.WriteLine(ex.Message);
+    Console.WriteLine(ex.StackTrace);
 
     throw;
 }
