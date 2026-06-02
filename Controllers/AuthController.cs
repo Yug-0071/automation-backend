@@ -241,7 +241,8 @@ namespace AutomationBackend.Controllers
             try
             {
                 var frontendUrl = _configuration["FrontendUrl"] ?? "http://localhost:5173";
-                string resetLink = $"{frontendUrl.TrimEnd('/')}/reset-password?token={token}";
+               string resetLink =
+$"https://automation-frontend-lime.vercel.app/reset-password?token={token}";
                 string subject = "Password Reset Verification Link";
                 string body = $@"
                     <div style='font-family: Arial, sans-serif; padding: 20px; color: #333;'>
