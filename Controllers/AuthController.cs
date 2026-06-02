@@ -112,7 +112,7 @@ namespace AutomationBackend.Controllers
             try
             {
                 var frontendUrl = _configuration["FrontendUrl"] ?? "http://localhost:5017";
-                string verifyLink = $"{frontendUrl.TrimEnd('/')}/verify-email?token={token}";
+                string verifyLink = $"https://automation-backend-0p7o.onrender.com/api/Auth/verify-email?token={token}";
                 string subject = "Email Verification Link";
                 string body = $@"
                     <div style='font-family: Arial, sans-serif; padding: 20px; color: #333;'>
